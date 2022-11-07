@@ -1,0 +1,26 @@
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+    int km, fuel_perKm = 100, greaterAmount;
+    double total_fuelAmount;
+    cout<<"Enter kilometer : ";
+    cin>>km;
+    
+    total_fuelAmount = km*fuel_perKm; //total_fuelAmaunt
+    greaterAmount = total_fuelAmount * 0.1; // if total_fuelAmount is greatern than 500
+    
+    if ( total_fuelAmount > 500 ) {
+        cout<<"Total amount is "<<greaterAmount; // if total_fuelAmount is greatern than 500
+    }
+       
+    else if (total_fuelAmount <= 500) {
+        
+        cout<<"Total amount is : "<<total_fuelAmount // if total_fuelAmount is lessthan or equal to 500
+    }
+    
+    
+    return 0;
+}
