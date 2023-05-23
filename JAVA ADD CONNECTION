@@ -1,0 +1,57 @@
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+//connection code
+Connection con;
+        PreparedStatement pst;
+    
+    public void Connection (){
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/klddb","root","");
+            
+            
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(AddTeacher.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(AddTeacher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+    }
+///add button code
+try {
+            // TODO add your handling code here:
+            String Sname = subName.getText();
+            String Sec = txtSec.getText();
+            String subCode = SubCode.getText();
+            String desp = txtDescpt.getText();
+            String teacherId = txtTid.getText();
+            
+            pst = con.prepareStatement("INSERT INTO subject (subjectName,section,sebjectCode,description,teacherID) VALUES(?,?,?,?,?)");
+            pst.setString(1, Sname);
+            pst.setString(2, Sec);
+            pst.setString(3,subCode);        
+            pst.setString(4,desp); 
+            pst.setString(5, teacherId); 
+            
+            
+            
+            int i = pst.executeUpdate();
+            if (i == 1) {
+                JOptionPane.showMessageDialog(this,"Record has been successfully Added!!");
+                subName.setText("");
+                txtSec.setText("");
+                SubCode.setText("");
+                txtDescpt.setText("");
+                txtTid.setText("");
+                
+            }
+            else {
+                JOptionPane.showMessageDialog(this,"Record failed to saved!!");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AddTeacher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }                    
