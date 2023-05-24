@@ -1,0 +1,201 @@
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
+//addTeacherClass
+
+public AddTeacher() {
+        initComponents();
+        Connection ();
+        LoadTeacher ();
+    }
+
+
+
+    
+//Connection
+    Connection con;
+    PreparedStatement pst;
+    ResultSet rs;
+    public void Connection (){
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/klddb","root","");
+            
+            
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(AddTeacher.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(AddTeacher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+    }
+
+
+//ValidationCode
+
+
+ private boolean validateLogin(String username, String pass, String userType) {
+        try {
+            
+            con = DriverManager.getConnection("jdbc:mysql://localhost/klddb","root","");
+            pst = con.prepareStatement("SELECT * FROM employee WHERE username=?, password=?, type=?");
+            rs = pst.executeQuery();
+            pst.setString(1, username);
+            pst.setString(2, pass);
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                String registeredUserType = rs.getString("type");
+                if (userType.equals(userType)) {
+                    return true;
+                    
+                }
+                else {
+                    if(registeredUserType.equals("admin")){
+                        JOptionPane.showMessageDialog(this,"Invalid Registered usertype!");
+                        
+                    }
+                    else if (registeredUserType.equals("teacher")) {
+                        JOptionPane.showMessageDialog(this,"Invalid Registered usertype!");
+                    }
+                }
+            }
+            
+            
+        }
+        catch (SQLException e) {
+        } 
+    return false;
+}
+
+
+//LoginButtonCode
+
+String username = txtUsername.getText();
+        String pass = new String(txtPass.getPassword());
+        String userType = (String)userTypeComboBox.getSelectedItem();
+        if(validateLogin( username, pass, userType)) {
+            if (userType.equals("admin")) {
+                HomePage homePage = new HomePage(username,userType);
+                homePage.setVisible(true);
+                dispose();
+            }
+            else if (userType.equals("teacher")) {
+                TeacherPage teacherPage = new TeacherPage(username);
+                teacherPage.setVisible(true);
+                dispose();
+            }
+        HomePage homePage = new HomePage(username,userType);
+        homePage.setVisible(true);
+        dispose();
+        
+        }
+        else {
+                JOptionPane.showMessageDialog(this,"INVALID Username or Password, Login Failed!");
+                
+                }
+                
+    }                                        
+  
+//Searchbutton
+
+            String EmployeeID = txtIDno.getSelectedItem().toString();
+            pst = con.prepareStatement("SELECT * FROM  employee WHERE employeeID = ?");
+            pst.setString(1, EmployeeID);
+            rs = pst.executeQuery();
+            if (rs.next()== true) {
+                 txtFname.setText(rs.getString(2));
+                 txtLname.setText(rs.getString(3));
+                 txtEmail.setText(rs.getString(4));
+                 txtAge.setText(rs.getString(5));
+                 txtUname.setText(rs.getString(6));
+                 txtPass.setText(rs.getString(7));
+                 txtType.setText(rs.getString(8));
+            }
+            
+            else  {
+                JOptionPane.showMessageDialog(this, "No Record Found!");
+            }
+                
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(AddTeacher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+ 
+
+//UPDATE BUTTON
+
+try {
+            // TODO add your handling code here:
+            //UPDATE BUTTON
+            String fname = txtFname.getText();
+            String lname = txtLname.getText();
+            String email = txtEmail.getText();
+            String age = txtAge.getText();
+            String uname = txtUname.getText();
+            String pass = txtPass.getText();
+            String tp = txtType.getText();
+            String EmployeeID = txtIDno.getSelectedItem().toString();
+            
+            pst = con.prepareStatement("UPDATE employee SET firstName=?, lastName=?, email=?, age=?, username=?, password=?, type=? WHERE employeeID=?");
+            
+            pst.setString(1, fname);
+            pst.setString(2,lname);
+            pst.setString(3,email);        
+            pst.setString(4,age); 
+            pst.setString(5,uname); 
+            pst.setString(6,pass); 
+            pst.setString(7,tp); 
+            pst.setString(8,EmployeeID); 
+            
+            int i = pst.executeUpdate();
+            if(i == 1) {
+                JOptionPane.showMessageDialog(this,"Record Successfully Updated!!!!");
+                txtFname.setText("");
+                txtLname.setText("");
+                txtEmail.setText("");
+                txtAge.setText("");
+                txtUname.setText("");
+                txtPass.setText("");
+                txtType.setText("");
+                txtFname.requestFocus();
+                LoadTeacher();
+            }
+                
+        } catch (SQLException ex) {
+            Logger.getLogger(AddTeacher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }                                         
+
+//DELETE BUTTON
+
+try {
+            // TODO add your handling code here:
+            String EmployeeID = txtIDno.getSelectedItem().toString();
+            pst = con.prepareStatement("SELECT * FROM  employee WHERE employeeID = ?");
+            pst.setString(1, EmployeeID);
+            rs = pst.executeQuery();
+            if (rs.next()== true) {
+                 txtFname.setText(rs.getString(2));
+                 txtLname.setText(rs.getString(3));
+                 txtEmail.setText(rs.getString(4));
+                 txtAge.setText(rs.getString(5));
+                 txtUname.setText(rs.getString(6));
+                 txtPass.setText(rs.getString(7));
+                 txtType.setText(rs.getString(8));
+            }
+            
+            else  {
+                JOptionPane.showMessageDialog(this, "No Record Found!");
+            }
+                
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(AddTeacher.class.getName()).log(Level.SEVERE, null, ex);
+        }
+               
